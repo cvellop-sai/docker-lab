@@ -116,9 +116,10 @@ INSERT INTO items(name) VALUES ('item1');
 
    ![Resultado de ejecución](capturas/captura-1-3-3-1.png)
 
-   ![Resultado de ejecución](capturas/captura-1-3-3-2.png)
-
 Comprueba que los datos siguen existiendo.
+
+   ![Resultado de ejecución](capturas/captura-1-3-3-2.png)
+   
 
 # 4. Bind mounts
 
@@ -132,6 +133,7 @@ Ejemplo:
 <h1>Hola Docker</h1>
 ```
 
+   ![Resultado de ejecución](capturas/captura-1-4-1.png)
 ---
 
 Ejecuta un contenedor `nginx`:
@@ -147,12 +149,135 @@ Ejecuta un contenedor `nginx`:
 
 Abre el navegador.
 
+   ![Resultado de ejecución](capturas/captura-1-4-2.png)
 ---
 
 Pregunta:
 
 ¿Qué ocurre si modificas el archivo `index.html` en tu máquina?
 
+   - Automáticamente se modifica en el contenedor, actualizandose en la web del navegador.
+
+   ![Resultado de ejecución](capturas/captura-1-4-3.png)
+   ![Resultado de ejecución](capturas/captura-1-4-4.png)
 ---
 
+# 5. Auditando volúmenes (opcional)
 
+Investiga:
+
+¿Qué comando permite ver **dónde guarda Docker los datos de un
+volumen**?
+   - `$ docker volume inspect postgres-data`
+
+   ![Resultado de ejecución](capturas/captura-1-5-1.png)
+---
+
+# 6. Creando redes privadas
+
+Crea una red llamada:
+
+    my-net
+
+---
+
+Arranca dos contenedores `ubuntu` en esa red.
+
+Instala `ping` si es necesario.
+
+Desde un contenedor intenta hacer:
+
+```bash
+ping otro_contenedor
+```
+
+---
+
+Pregunta
+
+¿Los contenedores pueden comunicarse entre sí?
+
+---
+
+# 7. Red none (opcional)
+
+Investiga:
+
+¿Para qué serviría ejecutar un contenedor con red:
+
+    none
+
+---
+
+# 8. Multi-network (opcional)
+
+Crea dos redes:
+
+    secure-zone
+    public-zone
+
+Arranca un contenedor en `public-zone`.
+
+Pregunta:
+
+¿Puedes conectarlo también a `secure-zone`?
+
+¿Qué comando usarías?
+
+---
+
+# 9. Docker Compose --- Compartiendo volúmenes
+
+Crea un fichero:
+
+    docker-compose.yml
+
+Con dos servicios.
+
+---
+
+## writer
+
+Debe:
+
+- montar un volumen en `/app/logs`
+- escribir un timestamp cada 30 segundos
+
+---
+
+## reader
+
+Debe:
+
+- montar el volumen en modo solo lectura
+- mostrar el contenido en consola
+
+---
+
+# 10. Docker Compose Profiles (opcional)
+
+Crea un `docker-compose.yml` con:
+
+- `postgres`
+- `pgadmin`
+
+Haz que `pgadmin` pueda conectarse a `postgres`.
+
+---
+
+Crea dos perfiles:
+
+### Perfil completo
+
+Levanta:
+
+- postgres
+- pgadmin
+
+### Perfil base
+
+Levanta solo:
+
+- postgres
+
+---

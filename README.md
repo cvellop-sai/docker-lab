@@ -178,25 +178,43 @@ volumen**?
 Crea una red llamada:
 
     my-net
+   - `docker network create my-net`
 
+   ![Resultado de ejecución](capturas/captura-1-6-1.png)
 ---
 
 Arranca dos contenedores `ubuntu` en esa red.
+   - `docker run -it --name ubuntu1 --network my-net ubuntu bash`
+   ![Resultado de ejecución](capturas/captura-1-6-2.png)
+
+
+   - `docker run -it --name ubuntu2 --network my-net ubuntu bash`
+   ![Resultado de ejecución](capturas/captura-1-6-3.png)
 
 Instala `ping` si es necesario.
+
+   ![Resultado de ejecución](capturas/captura-1-6-4.png)
+
 
 Desde un contenedor intenta hacer:
 
 ```bash
 ping otro_contenedor
 ```
+   - Desde ubuntu1: `$ ping -c 1 ubuntu2`
+   - Desde ubuntu2: `$ ping -c 1 ubuntu1`
 
+   ![Resultado de ejecución](capturas/captura-1-6-5.png)
 ---
 
 Pregunta
 
 ¿Los contenedores pueden comunicarse entre sí?
+Sí. Pueden usar el nombre del contenedor gracias al DNS interno de la red creada.
 
+   ![Resultado de ejecución](capturas/captura-1-6-6.png)
+
+   ![Resultado de ejecución](capturas/captura-1-6-7.png)
 ---
 
 # 7. Red none (opcional)
@@ -207,6 +225,7 @@ Investiga:
 
     none
 
+   - Ejecución aislada de la red, evitando ataques y fuga de datos.
 ---
 
 # 8. Multi-network (opcional)
@@ -216,14 +235,22 @@ Crea dos redes:
     secure-zone
     public-zone
 
+   - `$ docker network create secure-zone`
+   - `$ docker network create public-zone`
+
 Arranca un contenedor en `public-zone`.
+   - `$ docker run -it -name ubuntu-public --network public-zone ubuntu bash`
+
+   ![Resultado de ejecución](capturas/captura-1-8-1.png)
 
 Pregunta:
 
 ¿Puedes conectarlo también a `secure-zone`?
-
+   - Sí. Los contenedores pueden tener varias interfaces de red.
 ¿Qué comando usarías?
-
+   - `docker network connect secure-zone ubuntu-public`
+   - comprobación: `docker inspect ubuntu-public`
+   ![Resultado de ejecución](capturas/captura-1-8-2.png)
 ---
 
 # 9. Docker Compose --- Compartiendo volúmenes
@@ -233,6 +260,7 @@ Crea un fichero:
     docker-compose.yml
 
 Con dos servicios.
+
 
 ---
 
@@ -251,6 +279,17 @@ Debe:
 
 - montar el volumen en modo solo lectura
 - mostrar el contenido en consola
+
+   ![Resultado de ejecución](capturas/captura-1-9-1.png)
+
+---
+
+## Ejecución
+
+   ![Resultado de ejecución](capturas/captura-1-9-2.png)
+
+   - Parada y ejecución (El volumen mantiene logs anteriores)
+   ![Resultado de ejecución](capturas/captura-1-9-3.png)
 
 ---
 
@@ -280,4 +319,40 @@ Levanta solo:
 
 - postgres
 
+
+## docker-compose.yml
+```
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: mipassword
+    profiles:
+      - base
+      - completo
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@miapp.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    profiles:
+      - completo
+    depends_on:
+      - postgres
+```
+## Ejecuciones
+   - profile base: `$ docker compose --profile base up`
+
+   ![Resultado de ejecución](capturas/captura-1-10-1.png)
+
+   ![Resultado de ejecución](capturas/captura-1-10-2.png)
+
+   - profile completo: `$ docker compose --profile completo up`
+
+   ![Resultado de ejecución](capturas/captura-1-10-3.png)
+
+   ![Resultado de ejecución](capturas/captura-1-10-4.png)
 ---

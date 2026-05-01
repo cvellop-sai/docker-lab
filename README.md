@@ -19,7 +19,7 @@
    ```bash
    apt-get update
    apt-get install curl
-
+   ```
    ![Resultado de ejecución](capturas/captura-1-1-3a.png)
    ![Resultado de ejecución](capturas/captura-1-1-3b.png)
    ![Resultado de ejecución](capturas/captura-1-1-3c.png)
